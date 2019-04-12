@@ -1,0 +1,19 @@
+#if ($ctx.error)
+	$util.error($ctx.error.message, $ctx.error.type, $ctx.result)
+#end
+
+#if ($util.isNull($ctx.result))
+	#return
+#end
+
+#set ($id = $$context.result.get('_id'))
+#set ($source = $$context.result.get('_source'))
+
+#set ($item = {
+	'id': 			$!id,
+	'title':		$!source['title'],
+	'body':			$!source['body'],
+	'published_at':	$!source['published_at']
+})
+
+$util.toJson($item)

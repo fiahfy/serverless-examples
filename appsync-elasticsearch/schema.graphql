@@ -1,0 +1,20 @@
+type Article {
+  id: String!
+  title: String!
+  body: String!
+  published_at: AWSDateTime!
+}
+
+type ArticleConnection {
+  totalCount: Int!
+  nodes: [Article!]!
+}
+
+type Query {
+  searchArticles(keyword: String!, from: Int, size: Int): ArticleConnection
+  article(id: String!): Article
+}
+
+schema {
+  query: Query
+}

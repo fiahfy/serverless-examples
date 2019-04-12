@@ -1,0 +1,68 @@
+references:
+  defaults: &defaults
+    docker:
+      - image: circleci/node:10.15
+version: 2
+jobs:
+  dependencies:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - v2-dependencies-{{ checksum "yarn.lock" }}
+            - v2-dependencies-
+      - run:
+          name: Install Dependencies
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: v2-dependencies-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+  beta:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          key: v2-dependencies-{{ checksum "yarn.lock" }}
+      - deploy:
+          name: Deploy to Testing
+          command: yarn deploy --stage testing
+      - deploy:
+          name: Deploy to Staging
+          command: yarn deploy --stage staging
+  release:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          key: v2-dependencies-{{ checksum "yarn.lock" }}
+      - deploy:
+          name: Deploy to Production
+          command: yarn deploy --stage production
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - dependencies:
+          filters:
+            branches:
+              only:
+                - develop
+                - master
+      - beta:
+          requires:
+            - dependencies
+          filters:
+            branches:
+              only: develop
+      - release:
+          requires:
+            - dependencies
+          filters:
+            branches:
+              only: master

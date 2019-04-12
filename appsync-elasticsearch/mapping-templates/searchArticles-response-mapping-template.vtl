@@ -1,0 +1,30 @@
+#if ($ctx.error)
+	$util.error($ctx.error.message, $ctx.error.type, $ctx.result)
+#end
+
+#if ($util.isNull($ctx.result))
+	#return
+#end
+
+#set ($items = [])
+
+#foreach ($entry in $context.result.hits.hits)
+
+	#set ($id = $entry.get('_id'))
+	#set ($source = $entry.get('_source'))
+
+	#set ($item = {
+		'id': 			$!id,
+		'title':		$!source['title'],
+		'body':			$!source['body'],
+		'published_at':	$!source['published_at']
+	})
+
+	$util.qr($items.add($item))
+
+#end
+
+{
+	"totalCount": $context.result.hits.total,
+	"nodes": $util.toJson($items)
+}

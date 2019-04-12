@@ -1,0 +1,18 @@
+{
+	"version": "2018-05-29",
+	"operation": "GET",
+	"path": "/index/_doc/_search",
+	"params": {
+		"body": {
+			"from": $util.defaultIfNull($context.arguments.from, 0),
+			"size": $util.defaultIfNull($context.arguments.size, 10),
+			"query": {
+				"bool": {
+					"must": [
+						{ "match": { "title": "$context.arguments.keyword" } }
+					]
+				}
+			}
+		}
+	}
+}
