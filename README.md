@@ -1,2 +1,2 @@
 # serverless-samples
-> Samples for Serverless Application.
+> Samples for Serverless Framework.
