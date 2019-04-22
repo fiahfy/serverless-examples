@@ -1,5 +1,5 @@
-# appsync-elasticsearch
-> AppSync for ElasticSearch Service.
+# aws-appsync-elasticsearch
+> AWS AppSync for ElasticSearch Service.
 
 
 ## Development
